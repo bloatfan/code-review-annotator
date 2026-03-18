@@ -1,0 +1,91 @@
+<idea-plugin>
+    <id>com.codereview.annotator</id>
+    <name>Code Review Annotator</name>
+    <version>0.1.0</version>
+    <vendor>Code Review</vendor>
+    <description><![CDATA[
+        Add review comments on diffs right from your IDE on a line, a file, or the whole review.
+        When you're done, export everything as markdown you can paste into a PR, a chat, or an AI agent.
+        Comments show up inline in the editor and persist across restarts.
+        <br/><br/>
+        Inspired by <a href="https://github.com/agavra/tuicr">tuicr</a>.
+    ]]></description>
+
+    <change-notes><![CDATA[
+        Initial release.
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.codereview.service.ReviewSessionService"/>
+
+        <toolWindow id="Code Review"
+                    anchor="bottom"
+                    factoryClass="com.codereview.toolwindow.ReviewToolWindowFactory"
+                    icon="AllIcons.Actions.Annotate"/>
+
+        <notificationGroup id="CodeReviewAnnotator"
+                           displayType="BALLOON"
+                           toolWindowId="Code Review"/>
+
+        <postStartupActivity implementation="com.codereview.editor.ReviewEditorListenerStartup"/>
+        <postStartupActivity implementation="com.codereview.decoration.ChangesTreeDecoratorInstaller"/>
+    </extensions>
+
+    <actions>
+        <!-- Review-wide comment from tool window toolbar -->
+        <action id="CodeReview.AddReviewComment"
+                class="com.codereview.actions.AddReviewCommentAction"
+                text="Add Review Comment"
+                description="Add a review-wide comment">
+        </action>
+
+        <action id="CodeReview.ExportToClipboard"
+                class="com.codereview.actions.ExportToClipboardAction"
+                text="Copy Review"
+                description="Copy all review comments as markdown to the clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift alt E"/>
+        </action>
+
+        <action id="CodeReview.ClearSession"
+                class="com.codereview.actions.ClearSessionAction"
+                text="Clear Session"
+                description="Clear all review comments">
+        </action>
+
+        <action id="CodeReview.ExportToTerminal"
+                class="com.codereview.actions.ExportToTerminalAction"
+                text="Submit Review"
+                description="Submit all review comments to the active terminal session">
+            <add-to-group group-id="TerminalToolwindowActionGroup" anchor="last"/>
+        </action>
+
+        <!-- File comment from Changes view popup -->
+        <action id="CodeReview.AddFileComment"
+                class="com.codereview.actions.AddFileCommentAction"
+                text="Add File Comment..."
+                description="Add a review comment on this file">
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+        </action>
+
+        <!-- Line comment from editor context menu -->
+        <action id="CodeReview.AddLineCommentFromEditor"
+                class="com.codereview.actions.AddLineCommentFromEditorAction"
+                text="Add Review Comment Here..."
+                description="Add a review comment on the selected lines">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="Diff.EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift alt C"/>
+        </action>
+
+        <!-- Tool window toolbar group -->
+        <group id="CodeReview.ToolWindowToolbar">
+            <reference ref="CodeReview.ExportToTerminal"/>
+            <reference ref="CodeReview.ExportToClipboard"/>
+            <reference ref="CodeReview.ClearSession"/>
+        </group>
+    </actions>
+</idea-plugin>
