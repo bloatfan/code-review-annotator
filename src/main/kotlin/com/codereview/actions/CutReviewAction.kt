@@ -16,7 +16,7 @@ import java.awt.datatransfer.StringSelection
 class CutReviewAction : AnAction(
     "Cut Review",
     "Copy all review comments as markdown to the clipboard and remove them from the review",
-    AllIcons.Actions.Copy
+    AllIcons.Actions.MenuCut
 ) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
