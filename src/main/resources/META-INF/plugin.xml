@@ -63,6 +63,12 @@
             <add-to-group group-id="TerminalToolwindowActionGroup" anchor="last"/>
         </action>
 
+        <action id="CodeReview.CutReview"
+                class="com.codereview.actions.CutReviewAction"
+                text="Cut Review"
+                description="Copy all review comments as markdown to the clipboard and remove them from the review">
+        </action>
+
         <!-- File comment from Changes view popup -->
         <action id="CodeReview.AddFileComment"
                 class="com.codereview.actions.AddFileCommentAction"
@@ -83,6 +89,7 @@
 
         <!-- Tool window toolbar group -->
         <group id="CodeReview.ToolWindowToolbar">
+            <reference ref="CodeReview.CutReview"/>
             <reference ref="CodeReview.ExportToTerminal"/>
             <reference ref="CodeReview.ExportToClipboard"/>
             <reference ref="CodeReview.ClearSession"/>
